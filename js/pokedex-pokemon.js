@@ -214,15 +214,17 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 			var changes = '';
 
 			var nextGenType = latestGenType;
-			if (nextGenTable && id in nextGenTable.overrideType) nextGenType = nextGenTable.overrideType[id];
-			var curGenType = genTable.overrideType[id] || nextGenType;
+			if (nextGenTable && nextGenTable.overrideType && id in nextGenTable.overrideType) nextGenType = nextGenTable.overrideType[id];
+			var curGenType = nextGenType;
+			if (genTable.overrideType) curGenType = genTable.overrideType[id];
 			if (curGenType !== nextGenType) {
 				changes += 'Type: ' + curGenType + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenType + '<br />';
 			}
 
 			var nextGenAbility = pokemon.abilities['0'];
-			if (nextGenTable && id in nextGenTable.overrideAbility) nextGenAbility = nextGenTable.overrideAbility[id];
-			var curGenAbility = genTable.overrideAbility[id] || nextGenAbility;
+			if (nextGenTable && nextGenTable.overrideAbility && id in nextGenTable.overrideAbility) nextGenAbility = nextGenTable.overrideAbility[id];
+			var curGenAbility = nextGenAbility;
+			if (genTable.overrideAbility) curGenAbility = genTable.overrideAbility[id];
 			if (curGenAbility !== nextGenAbility) {
 				changes += 'Ability: ' + curGenAbility + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenAbility + '<br />';
 			}
@@ -230,8 +232,9 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 			for (var i in BattleStatNames) {
 				if (genNum === 1 && (i === 'spa' || i === 'spd')) continue;
 				var nextGenStat = pokemon.baseStats[i];
-				if (nextGenTable && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id][i]) nextGenStat = nextGenTable.overrideStats[id][i];
-				var curGenStat = (genTable.overrideStats[id] && genTable.overrideStats[id][i]) || nextGenStat;
+				if (nextGenTable && nextGenTable.overrideStats && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id][i]) nextGenStat = nextGenTable.overrideStats[id][i];
+				var curGenStat = nextGenStat;
+				if (genTable.overrideStats) curGenStat = genTable.overrideStats[id] && genTable.overrideStats[id][i];
 				if (curGenStat !== nextGenStat) {
 					changes += BattleStatNames[i] + ': ' + curGenStat + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenStat + '<br />';
 				}
