@@ -385,29 +385,33 @@ var PokedexMovePanel = PokedexResultPanel.extend({
 			var changes = '';
 
 			var nextGenType = move.type;
-			if (nextGenTable && nextGenTable.overrideMoveType[id]) nextGenType = nextGenTable.overrideMoveType[id];
-			var curGenType = genTable.overrideMoveType[id] || nextGenType;
+			if (nextGenTable && nextGenTable.overrideMoveType && nextGenTable.overrideMoveType[id]) nextGenType = nextGenTable.overrideMoveType[id];
+			var curGenType = nextGenType;
+			if (genTable.overrideMoveType) curGenType = genTable.overrideMoveType[id];
 			if (curGenType !== nextGenType) {
 				changes += 'Type: ' + curGenType + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenType + '<br />';
 			}
 
 			var nextGenBP = move.basePower;
-			if (nextGenTable && nextGenTable.overrideBP[id]) nextGenBP = nextGenTable.overrideBP[id];
-			var curGenBP = genTable.overrideBP[id] || nextGenBP;
+			if (nextGenTable && nextGenTable.overrideBP && nextGenTable.overrideBP[id]) nextGenBP = nextGenTable.overrideBP[id];
+			var curGenBP = nextGenBP;
+			if (genTable.overrideBP) curGenBP = genTable.overrideBP[id];
 			if (curGenBP !== nextGenBP) {
 				changes += 'Base power: ' + curGenBP + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenBP + '<br />';
 			}
 
 			var nextGenPP = move.pp;
-			if (nextGenTable && nextGenTable.overridePP[id]) nextGenPP = nextGenTable.overridePP[id];
-			var curGenPP = genTable.overridePP[id] || nextGenPP;
+			if (nextGenTable && nextGenTable.overridePP && nextGenTable.overridePP[id]) nextGenPP = nextGenTable.overridePP[id];
+			var curGenPP = nextGenPP;
+			if (genTable.overridePP) curGenPP = genTable.overridePP[id];
 			if (curGenPP !== nextGenPP) {
 				changes += 'PP: ' + curGenPP + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenPP + '<br />';
 			}
 
 			var nextGenAcc = move.accuracy;
-			if (nextGenTable && nextGenTable.overrideAcc[id]) nextGenAcc = nextGenTable.overrideAcc[id];
-			var curGenAcc = genTable.overrideAcc[id] || nextGenAcc;
+			if (nextGenTable && nextGenTable.overrideAcc && nextGenTable.overrideAcc[id]) nextGenAcc = nextGenTable.overrideAcc[id];
+			var curGenAcc = nextGenAcc;
+			if (genTable.overrideAcc) curGenAcc = genTable.overrideAcc[id];
 			if (curGenAcc !== nextGenAcc) {
 				var curGenAccText = (curGenAcc === true ? 'nevermiss' : curGenAcc + '%');
 				var nextGenAccText = (nextGenAcc === true ? 'nevermiss' : nextGenAcc + '%');
@@ -415,7 +419,8 @@ var PokedexMovePanel = PokedexResultPanel.extend({
 			}
 
 			var nextGenDesc = curGenDesc;
-			curGenDesc = genTable.overrideMoveDesc[id] || nextGenDesc;
+			curGenDesc = nextGenDesc;
+			if (genTable.overrideMoveDesc) curGenDesc = genTable.overrideMoveDesc[id];
 			if (curGenDesc !== nextGenDesc) {
 				changes += curGenDesc + ' <i class="fa fa-long-arrow-right"></i> ' + nextGenDesc + '<br />';
 			}
@@ -444,7 +449,7 @@ var PokedexMovePanel = PokedexResultPanel.extend({
 		if (this.results) return this.results;
 		var results = [];
 		for (var pokemonid in BattleLearnsets) {
-			if (BattlePokedex[pokemonid].isNonstandard) continue;
+			if (!BattlePokedex[pokemonid] || BattlePokedex[pokemonid].isNonstandard || !BattleLearnsets[pokemonid].learnset) continue;
 			var sources = BattleLearnsets[pokemonid].learnset[moveid];
 			if (!sources) continue;
 			if (typeof sources === 'string') sources = [sources];
@@ -452,7 +457,7 @@ var PokedexMovePanel = PokedexResultPanel.extend({
 			for (var i=0, len=sources.length; i<len; i++) {
 				var source = sources[i];
 				if (source.substr(0,2) === '8L') {
-					results.push('a'+sourcePad(source)+pokemonid);
+					results.push('a'+source.substr(2).padStart(3,'0')+' '+pokemonid);
 					atLeastOne = true;
 				} else if (source === '8M') {
 					results.push('b000 '+pokemonid);
