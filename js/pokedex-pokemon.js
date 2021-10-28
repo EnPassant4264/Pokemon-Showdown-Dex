@@ -242,10 +242,11 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 
 			if (genNum === 1 && pokemon.num > 0 && pokemon.num <= 151 && !pokemon.forme) {
 				var nextGenSpA = pokemon.baseStats['spa'];
-				if (nextGenTable && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id]['spa']) nextGenSpA = nextGenTable.overrideStats[id]['spa'];
+				if (nextGenTable && nextGenTable.overrideStats && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id]['spa']) nextGenSpA = nextGenTable.overrideStats[id]['spa'];
 				var nextGenSpD = pokemon.baseStats['spd'];
-				if (nextGenTable && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id]['spd']) nextGenSpD = nextGenTable.overrideStats[id]['spd'];
-				var curGenSpc = (genTable.overrideStats[id] && genTable.overrideStats[id]['spa']) || nextGenSpA;
+				if (nextGenTable && nextGenTable.overrideStats && nextGenTable.overrideStats[id] && nextGenTable.overrideStats[id]['spd']) nextGenSpD = nextGenTable.overrideStats[id]['spd'];
+				var curGenSpc = nextGenSpA;
+				if (genTable.overrideStats) curGenSpc = genTable.overrideStats[id] && genTable.overrideStats[id]['spa']
 				changes += '' + curGenSpc + ' Spc <i class="fa fa-long-arrow-right"></i> ' + nextGenSpA + ' SpA, ' + nextGenSpD + ' SpD<br />';
 			}
 
