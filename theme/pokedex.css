@@ -434,6 +434,14 @@ a.subtle:hover {
 	margin: 1em 2em;
 }
 
+.notice {
+	border: 1px solid #AFAF0C;
+	background: #F4EDCD;
+	border-radius: 3px;
+	padding: 5px 9px;
+	margin: 1em 2em;
+}
+
 .tabbar {
 	display: block;
 	list-style: none;

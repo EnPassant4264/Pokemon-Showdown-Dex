@@ -4,6 +4,10 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		var pokemon = Dex.getSpecies(id);
 		this.id = id;
 		this.shortTitle = pokemon.baseSpecies;
+		
+		if(pokemon.otherMetagame){ //Remove the metagame name from the Pokemon before displaying
+			pokemon.name = pokemon.name.substring(0,pokemon.name.indexOf("~"));
+		}
 
 		var buf = '<div class="pfx-body dexentry">';
 
@@ -18,6 +22,10 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		if (pokemon.num > 0) buf += ' <code>#'+pokemon.num+'</code>';
 		buf += '</h1>';
 
+		if (pokemon.otherMetagame){
+			buf += '<div class="notice">This result contains information for the <strong>' + pokemon.otherMetagame + '</strong> metagame.';
+		}
+		
 		if (pokemon.isNonstandard) {
 			if (id === 'missingno') {
 				buf += '<div class="warning"><strong>Note:</strong> This is a glitch Pok&eacute;mon from Red/Blue/Yellow.</div>';
@@ -31,8 +39,10 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 				buf += '<div class="warning"><strong>Note:</strong> This Pok&eacute;mon is not obtainable in the games, even via hacking.</div>';
 			} else if (pokemon.num > 0) {
 				buf += '<div class="warning"><strong>Note:</strong> This Pok&eacute;mon is unreleased.</div>';
-			} else {
+			} else if (pokemon.tier.substring(0,3) === "CAP"){
 				buf += '<div class="warning"><strong>Note:</strong> This is a made-up Pok&eacute;mon by <a href="http://www.smogon.com/cap/" target="_blank">Smogon CAP</a>.</div>';
+			} else {
+			buf += '<div class="warning">This Pok&eacute;mon is made-up for this Other Metagame.</div>';
 			}
 		}
 
