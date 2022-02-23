@@ -6,7 +6,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		this.shortTitle = pokemon.baseSpecies;
 		
 		if(pokemon.otherMetagame){ //Remove the metagame name from the Pokemon before displaying
-			pokemon.name = pokemon.name.substring(0,pokemon.name.indexOf("~"));
+			pokemon.name = pokemon.name.slice(0, pokemon.name.indexOf("~"));
 		}
 
 		var buf = '<div class="pfx-body dexentry">';
@@ -22,8 +22,8 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		if (pokemon.num > 0) buf += ' <code>#'+pokemon.num+'</code>';
 		buf += '</h1>';
 
-		if (pokemon.otherMetagame){
-			buf += '<div class="notice">This result contains information for the <strong>' + pokemon.otherMetagame + '</strong> metagame.';
+		if (pokemon.name.indexOf("~") > 0){
+			buf += '<div class="notice">This result contains information for the <strong>' + pokemon.name.slice(pokemon.name.indexOf("~")) + '</strong> metagame.';
 		}
 		
 		if (pokemon.isNonstandard) {
