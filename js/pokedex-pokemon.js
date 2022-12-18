@@ -23,7 +23,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		buf += '</h1>';
 
 		if (pokemon.name.indexOf("~") > 0){
-			buf += '<div class="notice">This result contains information for the <strong>' + pokemon.name.slice(pokemon.name.indexOf("~")) + '</strong> metagame.';
+			buf += '<div class="notice">This result contains information for the <strong>' + pokemon.name.slice(pokemon.name.indexOf("~")+1) + '</strong> metagame.</div>';
 		}
 		
 		if (pokemon.isNonstandard) {
@@ -39,7 +39,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 				buf += '<div class="warning"><strong>Note:</strong> This Pok&eacute;mon is not obtainable in the games, even via hacking.</div>';
 			} else if (pokemon.num > 0) {
 				buf += '<div class="warning"><strong>Note:</strong> This Pok&eacute;mon is unreleased.</div>';
-			} else if (pokemon.tier.substring(0,3) === "CAP"){
+			} else if (pokemon.isNonstandard === 'CAP'){
 				buf += '<div class="warning"><strong>Note:</strong> This is a made-up Pok&eacute;mon by <a href="http://www.smogon.com/cap/" target="_blank">Smogon CAP</a>.</div>';
 			} else {
 			buf += '<div class="warning">This Pok&eacute;mon is made-up for this Other Metagame.</div>';
@@ -135,7 +135,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 							}
 						}
 					}
-					var name = (template.forme ? template.baseSpecies+'<small>-'+template.forme+'</small>' : template.name);
+					var name = (template.forme ? (template.baseSpecies.indexOf("~") > 0 ? template.baseSpecies.slice(0, template.name.indexOf("~")) : template.baseSpecies)+'<small>-'+template.forme+'</small>' : template.name);
 					name = '<span class="picon" style="'+Dex.getPokemonIcon(template)+'"></span>'+name;
 					if (template === pokemon) {
 						buf += '<div><strong>'+name+'</strong></div>';
@@ -147,7 +147,9 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 			}
 			buf += '</td></tr></table>';
 			if (pokemon.prevo) {
-				buf += '<div><small>Evolves from ' + Dex.getSpecies(pokemon.prevo).name + ' (' + this.getEvoMethod(pokemon) + ')</small></div>';
+				let prevoNamo = Dex.getSpecies(pokemon.prevo).name;
+				prevoName = (prevoName.indexOf("~") > 0) ? prevoName.slice(0, prevoName.indexOf("~")) : prevoName;
+				buf += '<div><small>Evolves from ' + prevoName + ' (' + this.getEvoMethod(pokemon) + ')</small></div>';
 			}
 		} else {
 			buf += '<em>Does not evolve</em>';
@@ -157,6 +159,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 			buf += '</dd><dt>Formes:</dt> <dd>';
 			template = (pokemon.forme ? Dex.getSpecies(pokemon.baseSpecies) : pokemon);
 			var name = template.baseForme || 'Base';
+			name = (name.indexOf("~") > 0) ? name.slice(0, name.indexOf("~")) : name;
 			name = '<span class="picon" style="'+Dex.getPokemonIcon(template)+'"></span>'+name;
 			if (template === pokemon) {
 				buf += '<strong>'+name+'</strong>';
@@ -167,6 +170,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 			if (otherFormes) for (var i=0; i<otherFormes.length; i++) {
 				template = Dex.getSpecies(otherFormes[i]);
 				var name = template.forme;
+				name = (name.indexOf("~") > 0) ? name.slice(0, name.indexOf("~")) : name;
 				name = '<span class="picon" style="'+Dex.getPokemonIcon(template)+'"></span>'+name;
 				if (template === pokemon) {
 					buf += ', <strong>'+name+'</strong>';
@@ -181,6 +185,7 @@ var PokedexPokemonPanel = PokedexResultPanel.extend({
 		if (pokemon.cosmeticFormes) {
 			buf += '</dd><dt>Cosmetic formes:</dt> <dd>';
 			var name = pokemon.baseForme || 'Base';
+			name = (name.indexOf("~") > 0) ? name.slice(0, name.indexOf("~")) : name;
 			name = '<span class="picon" style="'+Dex.getPokemonIcon(pokemon)+'"></span>'+name;
 			buf += ''+name;
 
